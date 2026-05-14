@@ -9,8 +9,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
 app.config['SYNC_TOKEN'] = os.environ.get('SYNC_TOKEN', 'change-me')
+
+# CORS: allow frontend origin from env, default to local dev
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
+CORS(app, origins=[FRONTEND_URL])
 
 DATABASE = os.path.join(os.path.dirname(__file__), 'instance', 'sync.db')
 
@@ -130,4 +133,7 @@ def sync_pull():
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True, port=5000)
+    host = os.environ.get('HOST', '127.0.0.1')
+    port = int(os.environ.get('PORT', 5000))
+    debug = os.environ.get('FLASK_DEBUG', '0') == '1'
+    app.run(host=host, port=port, debug=debug)
