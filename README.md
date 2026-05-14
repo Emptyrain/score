@@ -104,23 +104,23 @@ npm run build
 # 3. 部署 dist/ 到任意静态托管（Nginx / OSS / GitHub Pages 等）
 ```
 
-Nginx 参考配置：
+Nginx 参考配置
 
 ```nginx
 server {
     listen 80;
-    server_name example.com;
+    server_name _;
 
     # 前端静态文件
-    root /path/to/frontend/dist;
-    index index.html;
-    location / {
-        try_files $uri $uri/ /index.html;
+    location /score/ {
+        alias /path/to/frontend/dist/;
+        index index.html;
+        try_files $uri $uri/ /score/index.html;
     }
 
     # 后端 API 反代
-    location /api/ {
-        proxy_pass http://127.0.0.1:5000;
+    location /score/api/ {
+        proxy_pass http://127.0.0.1:5000/api/;
         proxy_set_header Host $host;
     }
 }
