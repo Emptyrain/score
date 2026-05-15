@@ -17,9 +17,11 @@ app.use(ElementPlus, { locale: zhCn })
 app.use(router)
 app.mount('#app')
 
-// Android 返回按钮：优先回退路由，无历史时退出应用
+// Android 返回按钮：有历史时回退页面，无历史时退出应用
 CapacitorApp.addListener('backButton', ({ canGoBack }) => {
-  if (!canGoBack) {
+  if (canGoBack) {
+    window.history.back()
+  } else {
     CapacitorApp.exitApp()
   }
 })

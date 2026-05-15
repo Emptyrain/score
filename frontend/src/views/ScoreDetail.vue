@@ -43,7 +43,7 @@
       >
         <img
           :src="imageUrl"
-          :style="[inlineImgStyle, { display: 'block', margin: '0 auto' }]"
+          :style="[inlineImgStyle, { display: 'block', margin: '0 auto', maxWidth: '100%' }]"
           @load="inlineScale = 1; inlineTx = 0; inlineTy = 0"
           @dblclick="showFullscreen = true"
         />
@@ -80,7 +80,7 @@
           >
             <img
               :src="imageUrl"
-              :style="[fullImgStyle, { display: 'block', margin: '0 auto' }]"
+              :style="[fullImgStyle, { display: 'block', margin: '0 auto', maxWidth: '100%' }]"
               @dblclick="showFullscreen = false"
             />
           </div>
