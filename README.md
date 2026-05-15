@@ -155,8 +155,11 @@ openssl req -x509 -newkey rsa:2048 \
   -keyout /etc/nginx/certs/server.key \
   -out /etc/nginx/certs/server.crt \
   -days 3650 -nodes \
-  -subj "/CN=<你的服务器IP>"
+  -subj "/CN=<你的服务器IP>" \
+  -addext "subjectAltName=IP:<你的服务器IP>"
 ```
+
+> `-addext "subjectAltName=IP:..."` 是必须的。Android 7.0+ 强制要求证书包含 SAN 扩展，仅有 CN 会被拒绝。
 
 ### 2. nginx 新增 HTTPS server 块
 
@@ -186,10 +189,10 @@ server {
 
 ### 3. Android 信任自签名证书
 
-将服务器上的 `server.crt` 复制到 `frontend/android/app/src/main/res/raw/server_cert.pem`（需手动创建 `res/raw/` 目录），然后在 `network_security_config.xml` 的 `<trust-anchors>` 中添加：
+将服务器上的 `server.crt` 复制到 `frontend/android/app/src/main/res/raw/server.crt`（需手动创建 `res/raw/` 目录），然后在 `frontend/android/app/src/main/res/xml/network_security_config.xml` 的 `<trust-anchors>` 中添加：
 
 ```xml
-<certificates src="@raw/server_cert"/>
+<certificates src="@raw/server"/>
 ```
 
 ### 4. 前端切换 HTTPS
