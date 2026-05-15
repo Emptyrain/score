@@ -1,6 +1,6 @@
 {
   "appId": "com.fiammetta.score",
-  "appName": "Fiammetta曲谱",
+  "appName": "Fiammetta",
   "webDir": "dist",
   "server": {
     "androidScheme": "http"

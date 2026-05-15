@@ -125,12 +125,14 @@ export async function pull() {
     // If existing but not synced, keep local version as-is
   }
 
-  // Handle server-side deletions
-  const serverDeleted = pullData.deletedIds || []
-  for (const id of serverDeleted) {
-    const existing = await db.scores.get(id)
-    if (existing && existing.synced) {
-      await db.scores.delete(id)
+  // 删除本地已同步但服务端已不存在的记录（即在其他端被删除）
+  const pulledIds = new Set(pullData.records.map(r => r.id))
+  const allLocal = await db.scores.toArray()
+  let deletedCount = 0
+  for (const local of allLocal) {
+    if (local.synced && !pulledIds.has(local.id)) {
+      await db.scores.delete(local.id)
+      deletedCount++
     }
   }
 
@@ -138,7 +140,7 @@ export async function pull() {
 
   return {
     pulled: pullData.records.length,
-    deleted: serverDeleted.length,
+    deleted: deletedCount,
   }
 }
 
