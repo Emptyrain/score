@@ -5,7 +5,7 @@
 // 本地开发: http://localhost:5000
 // 云服务器同域部署 (nginx 反代): '/score' (不带末尾斜杠)
 // 云服务器独立部署: https://your-api-domain.com
-export const SYNC_SERVER_URL = 'http://localhost:5000'
+export const SYNC_SERVER_URL = 'http://ip/score'
 
 // 与后端 .env 中 SYNC_TOKEN 一致
 // Keep in sync with SYNC_TOKEN in backend .env

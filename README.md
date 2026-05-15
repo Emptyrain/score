@@ -51,6 +51,23 @@ npm run dev
 
 浏览器访问 `http://localhost:5173` 即可使用，数据存储在浏览器 IndexedDB 中。
 
+### Android APK 打包
+
+使用 Capacitor 将前端打包为 Android App，通过 WebView 运行。
+
+**前置条件**：安装 [Android Studio](https://developer.android.com/studio) 并配置好 Android SDK。
+
+```bash
+cd frontend
+npm install
+npm run android           # 构建前端 + 同步到 Android 项目
+npm run android:studio    # 构建 + 同步 + 打开 Android Studio
+```
+
+在 Android Studio 中：**Build → Build Bundle(s) / APK(s) → Build APK(s)** 即可生成 APK。
+
+> 如果同步服务器需要连接局域网的 HTTP 服务（如 `http://192.168.x.x:5000`），已在 `AndroidManifest.xml` 中开启了 `usesCleartextTraffic`，无需额外配置。
+
 ### 同步服务器（多端数据同步时选配）
 
 ```bash

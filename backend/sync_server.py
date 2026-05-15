@@ -11,9 +11,13 @@ load_dotenv()
 app = Flask(__name__)
 app.config['SYNC_TOKEN'] = os.environ.get('SYNC_TOKEN', 'change-me')
 
-# CORS: allow frontend origin from env, default to local dev
-FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
-CORS(app, origins=[FRONTEND_URL])
+# CORS: allow frontend origins
+# Web dev: http://localhost:5173, Android WebView: http://localhost, capacitor://localhost
+CORS(app, origins=[
+    os.environ.get('FRONTEND_URL', 'http://localhost:5173'),
+    'http://localhost',
+    'capacitor://localhost',
+])
 
 DATABASE = os.path.join(os.path.dirname(__file__), 'instance', 'sync.db')
 
