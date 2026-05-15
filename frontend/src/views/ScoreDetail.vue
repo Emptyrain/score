@@ -33,13 +33,7 @@
     <div v-else-if="imageUrl">
       <div
         ref="inlineContainerRef"
-        style="overflow: hidden; max-height: 70vh; background: #f5f7fa; border-radius: 4px; touch-action: none;"
-        @wheel="onInlineWheel"
-        @mousedown="onMouseDown($event, 'inline')"
-        @touchstart="onTouchStart($event, 'inline')"
-        @touchmove="onTouchMove($event, 'inline')"
-        @touchend="onTouchEnd($event, 'inline')"
-        @touchcancel="onTouchEnd($event, 'inline')"
+        style="overflow: hidden; max-height: 70vh; background: #f5f7fa; border-radius: 4px;"
       >
         <img
           :src="imageUrl"
@@ -48,16 +42,12 @@
           @dblclick="showFullscreen = true"
         />
       </div>
-      <div style="margin-top: 10px; display: flex; align-items: center;">
-        <el-button size="small" @click="zoomInline(1.2)">放大</el-button>
-        <el-button size="small" @click="zoomInline(0.8)">缩小</el-button>
-        <el-button size="small" @click="zoomInline(1)">重置</el-button>
+      <div style="margin-top: 10px;">
         <el-button size="small" @click="showFullscreen = true">全屏查看</el-button>
-        <span style="margin-left: 12px; color: #909399; font-size: 13px;">{{ Math.round(inlineScale * 100) }}%</span>
       </div>
 
       <el-dialog v-model="showFullscreen" :show-close="false" fullscreen destroy-on-close style="background: rgba(0,0,0,0.9);" @opened="fullScale = 1; fullTx = 0; fullTy = 0">
-        <div style="display: flex; flex-direction: column; height: 100%;">
+        <div style="display: flex; flex-direction: column; height: 100vh;">
           <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; color: #fff;">
             <span style="font-size: 14px;">{{ score?.name }}</span>
             <div>
