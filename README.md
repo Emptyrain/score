@@ -66,7 +66,7 @@ npm run android:studio    # 构建 + 同步 + 打开 Android Studio
 
 在 Android Studio 中：**Build → Build Bundle(s) / APK(s) → Build APK(s)** 即可生成 APK。
 
-> 如果同步服务器需要连接局域网的 HTTP 服务（如 `http://192.168.x.x:5000`），已在 `AndroidManifest.xml` 中开启了 `usesCleartextTraffic`，无需额外配置。
+> 如果同步服务器需要连接局域网的 HTTP 服务（如 `http://192.168.x.x:5000`），Android 网络策略由 `network_security_config.xml` 按域名控制，已对配置的服务器 IP 放行 HTTP 流量。如需 HTTPS（自签名证书），见下方 [HTTPS 配置](#https-配置可选)。
 
 ### 同步服务器（多端数据同步时选配）
 
@@ -121,7 +121,7 @@ npm run build
 # 3. 部署 dist/ 到任意静态托管（Nginx / OSS / GitHub Pages 等）
 ```
 
-Nginx 参考配置
+Nginx 参考配置（HTTP）
 
 ```nginx
 server {
@@ -142,6 +142,65 @@ server {
     }
 }
 ```
+
+## HTTPS 配置（可选）
+
+使用自签名证书 + nginx SSL 终结，Flask 内部继续 HTTP。
+
+### 1. 服务器生成自签名证书
+
+```bash
+mkdir -p /etc/nginx/certs
+openssl req -x509 -newkey rsa:2048 \
+  -keyout /etc/nginx/certs/server.key \
+  -out /etc/nginx/certs/server.crt \
+  -days 3650 -nodes \
+  -subj "/CN=<你的服务器IP>"
+```
+
+### 2. nginx 新增 HTTPS server 块
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name _;
+
+    ssl_certificate     /etc/nginx/certs/server.crt;
+    ssl_certificate_key /etc/nginx/certs/server.key;
+
+    location /score/ {
+        alias /path/to/frontend/dist/;
+        index index.html;
+        try_files $uri $uri/ /score/index.html;
+    }
+
+    location /score/api/ {
+        proxy_pass http://127.0.0.1:5000/api/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+验证并重载：`nginx -t && nginx -s reload`
+
+### 3. Android 信任自签名证书
+
+将服务器上的 `server.crt` 复制到 `frontend/android/app/src/main/res/raw/server_cert.pem`（需手动创建 `res/raw/` 目录），然后在 `network_security_config.xml` 的 `<trust-anchors>` 中添加：
+
+```xml
+<certificates src="@raw/server_cert"/>
+```
+
+### 4. 前端切换 HTTPS
+
+修改 `frontend/src/config.js`：
+
+```js
+export const SYNC_SERVER_URL = 'https://<你的服务器IP>/score/'
+```
+
+然后 `npm run build && npx cap sync`。
 
 ## 同步 API
 
