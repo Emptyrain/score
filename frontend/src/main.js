@@ -3,6 +3,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import { App as CapacitorApp } from '@capacitor/app'
 import App from './App.vue'
 import router from './router'
 
@@ -15,3 +16,10 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 app.use(ElementPlus, { locale: zhCn })
 app.use(router)
 app.mount('#app')
+
+// Android 返回按钮：优先回退路由，无历史时退出应用
+CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+  if (!canGoBack) {
+    CapacitorApp.exitApp()
+  }
+})
