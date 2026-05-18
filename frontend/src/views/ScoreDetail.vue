@@ -28,6 +28,21 @@
       <div style="white-space: pre-wrap; font-family: monospace; font-size: 16px; background: #f5f7fa; padding: 16px; border-radius: 4px;">
         {{ score?.content || '无内容' }}
       </div>
+      <div style="margin-top: 10px;">
+        <el-button size="small" @click="showNumberFullscreen = true">全屏查看</el-button>
+      </div>
+
+      <el-dialog v-model="showNumberFullscreen" :show-close="false" fullscreen destroy-on-close style="background: rgba(0,0,0,0.9);">
+        <div style="display: flex; flex-direction: column; height: 100vh;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 16px; color: #fff;">
+            <span style="font-size: 14px;">{{ score?.name }}</span>
+            <el-button size="small" text style="color: #fff;" @click="showNumberFullscreen = false">关闭</el-button>
+          </div>
+          <div style="flex: 1; overflow: auto; padding: 24px;">
+            <pre style="white-space: pre-wrap; font-family: monospace; font-size: 20px; color: #e0e0e0; line-height: 1.8; margin: 0;">{{ score?.content || '无内容' }}</pre>
+          </div>
+        </div>
+      </el-dialog>
     </div>
 
     <div v-else-if="imageUrl">
@@ -92,6 +107,7 @@ const props = defineProps(['id'])
 
 const score = ref(null)
 const showFullscreen = ref(false)
+const showNumberFullscreen = ref(false)
 const inlineContainerRef = ref(null)
 const fullContainerRef = ref(null)
 

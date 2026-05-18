@@ -96,7 +96,7 @@ const keyword = ref('')
 const selectedIds = ref(new Set())
 const pushing = ref(false)
 const pulling = ref(false)
-const groupBy = ref('author')
+const groupBy = ref('source')
 const collapsedGroups = ref(new Set())
 
 const groupedScores = computed(() => {
